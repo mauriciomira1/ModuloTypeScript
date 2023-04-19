@@ -1,0 +1,9 @@
+{
+  "description": "",
+  "scripts": {
+    "tsc-watch": "npx tsc"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.4"
+  }
+}
