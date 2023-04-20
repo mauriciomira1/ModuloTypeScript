@@ -1,50 +1,94 @@
 const planets = [];
 function newPlanet(name, coordinates, situation) {
-    let planet = {
+    planets.push({
         name,
         coordinates,
         situation,
         satellites: []
-    };
-    if (situation) {
-        planets.push(planet);
+    });
+    alert(`Planeta ${name} criado.`);
+}
+function validadePromptSituation() {
+    let situation;
+    let validSituation = false;
+    while (!validSituation) {
+        const situationInput = prompt('Informe a situação do planeta?\n1 - Habitado\n2 - Habitável\n3 - Inabitável\n4 - Inexplorado');
+        switch (situationInput) {
+            case '1':
+                situation = "habitado";
+                validSituation = true;
+                break;
+            case '2':
+                situation = "habitável";
+                validSituation = true;
+                break;
+            case '3':
+                situation = "inabitável";
+                validSituation = true;
+                break;
+            case '4':
+                situation = "inexplorado";
+                validSituation = true;
+                break;
+            default:
+                alert("A situação inserida foi inválida!");
+                break;
+        }
+    }
+    return situation;
+}
+function validadePromptPlanet(callbackfn) {
+    const planetName = prompt("Informe o nome do planeta:");
+    const planet = findPlanet(planetName);
+    if (planet) {
+        callbackfn(planet);
     }
     else {
-        console.log('Essa situação não existe.');
+        alert("Planeta não encontrado. Voltando ao menu...");
     }
 }
-function updateSituation(name, situation) {
-    let selectedPlanet;
-    selectedPlanet = planets.find(planet => { planet.name === name; });
-    console.log(selectedPlanet);
-    if (selectedPlanet) {
-        selectedPlanet.situation = situation;
+function firstMenuOption() {
+    const name = prompt("Insira o nome do planeta:");
+    const coordinateA = Number(prompt('Informe a primeira coordenada:'));
+    const coordinateB = Number(prompt('Informe a segunda coordenada:'));
+    const coordinateC = Number(prompt('Informe a terceira coordenada:'));
+    const coordinateD = Number(prompt('Informe a quarta coordenada:'));
+    const situation = validadePromptSituation();
+    const confirmation = confirm(`Confirma o registro do planeta ${name}?
+  Coordenadas: (${coordinateA}, ${coordinateB}, ${coordinateC}, ${coordinateD})
+  Situação: ${situation}?`);
+    if (confirmation) {
+        newPlanet(name, [coordinateA, coordinateB, coordinateC, coordinateD], situation);
     }
     else {
-        alert(`O planeta ${name} não foi encontrado.`);
+        alert('Operação cancelada. Nada foi alterado.');
     }
 }
-function addSatellite(name, satellite) {
-    let selectedPlanet;
-    selectedPlanet = planets.find(planet => planet.name === name);
-    if (selectedPlanet) {
-        selectedPlanet.satellites.push(satellite);
-        alert(`O satélite ${satellite} foi adicionado ao planeta ${name}.`);
+function findPlanet(name) {
+    const planet = planets.find(planet => planet.name === name);
+    return planet !== null && planet !== void 0 ? planet : false;
+}
+function updateSituation(planet, situation) {
+    if (planet) {
+        planet.situation = situation;
+        alert(`A situação do planeta ${planet.name} foi atualizada para ${situation}.`);
     }
     else {
-        alert(`O planeta ${name} não foi encontrado.`);
+        alert(`O planeta ${planet} não foi encontrado.`);
     }
 }
-function removeSatellite(name, satellite) {
-    let selectedPlanet;
-    selectedPlanet = planets.find(planet => planet.name === name);
-    if (selectedPlanet) {
-        selectedPlanet.satellites = selectedPlanet.satellites.filter(s => s !== satellite);
-        alert(`O satélite ${satellite} foi removido do planeta ${name}.`);
+function addSatellite(planet, satellite) {
+    if (planet) {
+        planet.satellites.push(satellite);
+        alert(`O satélite ${satellite} foi adicionado ao planeta ${planet.name}.`);
     }
     else {
-        alert(`O planeta ${name} não foi encontrado.`);
+        alert(`O planeta ${planet.name} não foi encontrado.`);
     }
+}
+function removeSatellite(planet, name) {
+    planet.satellites = planet.satellites.filter(satellite => satellite !== name);
+    alert(`O satélite ${name} foi removido do planeta ${planet.name}.`);
 }
 function listPlanets() {
     console.log(planets);
