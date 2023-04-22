@@ -47,35 +47,13 @@ function validadePromptPlanet(callbackfn) {
         alert("Planeta não encontrado. Voltando ao menu...");
     }
 }
-function firstMenuOption() {
-    const name = prompt("Insira o nome do planeta:");
-    const coordinateA = Number(prompt('Informe a primeira coordenada:'));
-    const coordinateB = Number(prompt('Informe a segunda coordenada:'));
-    const coordinateC = Number(prompt('Informe a terceira coordenada:'));
-    const coordinateD = Number(prompt('Informe a quarta coordenada:'));
-    const situation = validadePromptSituation();
-    const confirmation = confirm(`Confirma o registro do planeta ${name}?
-  Coordenadas: (${coordinateA}, ${coordinateB}, ${coordinateC}, ${coordinateD})
-  Situação: ${situation}?`);
-    if (confirmation) {
-        newPlanet(name, [coordinateA, coordinateB, coordinateC, coordinateD], situation);
-    }
-    else {
-        alert('Operação cancelada. Nada foi alterado.');
-    }
-}
 function findPlanet(name) {
     const planet = planets.find(planet => planet.name === name);
     return planet !== null && planet !== void 0 ? planet : false;
 }
 function updateSituation(planet, situation) {
-    if (planet) {
-        planet.situation = situation;
-        alert(`A situação do planeta ${planet.name} foi atualizada para ${situation}.`);
-    }
-    else {
-        alert(`O planeta ${planet} não foi encontrado.`);
-    }
+    planet.situation = situation;
+    alert(`A situação do planeta ${planet.name} foi atualizada para ${situation}.`);
 }
 function addSatellite(planet, satellite) {
     if (planet) {
@@ -93,3 +71,96 @@ function removeSatellite(planet, name) {
 function listPlanets() {
     console.log(planets);
 }
+function firstMenuOption() {
+    const name = prompt("Insira o nome do planeta:");
+    const coordinateA = Number(prompt('Informe a primeira coordenada:'));
+    const coordinateB = Number(prompt('Informe a segunda coordenada:'));
+    const coordinateC = Number(prompt('Informe a terceira coordenada:'));
+    const coordinateD = Number(prompt('Informe a quarta coordenada:'));
+    const situation = validadePromptSituation();
+    const confirmation = confirm(`Confirma o registro do planeta ${name}?
+  Coordenadas: (${coordinateA}, ${coordinateB}, ${coordinateC}, ${coordinateD})
+  Situação: ${situation}?`);
+    if (confirmation) {
+        newPlanet(name, [coordinateA, coordinateB, coordinateC, coordinateD], situation);
+    }
+    else {
+        alert('Operação cancelada. Nada foi alterado.');
+    }
+}
+function secondMenuOption() {
+    validadePromptPlanet(planet => {
+        const situation = validadePromptSituation();
+        updateSituation(planet, situation);
+    });
+}
+function thirdMenuOption() {
+    validadePromptPlanet(planet => {
+        const satellite = prompt("Informe o nome do satélite: ");
+        addSatellite(planet, satellite);
+    });
+}
+function fourthMenuOption() {
+    validadePromptPlanet(planet => {
+        const satellite = prompt("Satélite a remover:");
+        removeSatellite(planet, satellite);
+    });
+}
+function fifthMenuOption() {
+    let list = "Planetas:\n";
+    planets.forEach(planet => {
+        const [a, b, c, d] = planet.coordinates;
+        list += `
+    Nome: ${planet.name}
+    Coordenadas: ${a}, ${b}, ${c}, ${d}
+    Situação: ${planet.situation}
+    Satélites: ${planet.satellites.length}
+    `;
+        planet.satellites.forEach(satellite => {
+            list += `      - ${satellite}\n`;
+        });
+    });
+    alert(list);
+}
+function Menu() {
+    const option = prompt(`
+  Escolha uma opção:
+
+  1) Adicionar um planeta
+  2) Alterar uma situação
+  3) Adicionar um satélite
+  4) Remover um satélite
+  5) Listar planetas
+  6) Sair
+  `);
+    switch (option) {
+        case '1':
+            firstMenuOption();
+            Menu();
+            break;
+        case '2':
+            secondMenuOption();
+            Menu();
+            break;
+        case '3':
+            thirdMenuOption();
+            Menu();
+            break;
+        case '4':
+            fourthMenuOption();
+            Menu();
+            break;
+        case '5':
+            fifthMenuOption();
+            Menu();
+            break;
+        case '6':
+            alert('Encerrando programa...');
+            break;
+        default:
+            alert('Número Inválido! Tente novamente.');
+            Menu();
+            break;
+    }
+}
+Menu();
